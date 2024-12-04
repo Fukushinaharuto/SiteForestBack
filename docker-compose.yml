@@ -1,0 +1,20 @@
+services:
+  back:
+    build: ./
+    volumes:
+      - ./back:/back
+    ports:
+      - 8003:8000
+  db:
+    image: postgres:17.1 # PostgreSQLの最新バージョンを指定
+    ports:
+      - 5432:5432       # PostgreSQLのデフォルトポート
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: SiteForest
+    volumes:
+      - db:/var/lib/postgresql/data  # PostgreSQLのデータ保存先
+
+volumes:
+  db:
