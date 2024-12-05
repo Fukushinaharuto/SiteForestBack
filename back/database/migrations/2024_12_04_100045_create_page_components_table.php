@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('page_id')->constrained('pages')->onDelete('cascade');
             $table->foreignId('component_id')->constrained('components')->onDelete('cascade');
             $table->foreignId('properties_id')->nullable()->constrained('properties')->onDelete('set null');
-            $table->float('position_x');
-            $table->float('position_y');
+            $table->float('top');
+            $table->float('left');
             $table->float('width');
             $table->float('height');
+            $table->integer('z_index');
             $table->timestamps();
         });
     }

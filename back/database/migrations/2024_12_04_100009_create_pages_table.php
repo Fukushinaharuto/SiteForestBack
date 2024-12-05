@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->string('page_title');
+            $table->string('name');
             $table->string('route')->unique();
-            $table->boolean('device');
             $table->timestamps();
         });
     }
