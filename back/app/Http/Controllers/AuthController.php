@@ -9,15 +9,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function store(Request $requst) 
+    public function store(RegisterRequest $requst) 
     {
-        $validatedData = $requst->validate([
-            'email' => ['required', 'string', 'email', 'unique:users'],
-            'password' => ['required', 'string', 'confirmed', Password::defaults()],
-        ]);
+        $validatedData = $requst->validated();
         $user = User::create([
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
@@ -27,6 +25,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return response()->noContent();
+        return response()->noContent(202);
     }
 }
