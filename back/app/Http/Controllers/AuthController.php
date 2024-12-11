@@ -17,7 +17,6 @@ class AuthController extends Controller
     public function index(LoginRequest $request)
     {
         $validatedData = $request->validated();
-        \Log::info('Login attempt:', $validatedData);
         if(Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])){
             $user = Auth::user();
             $token = $user->createToken('token')->plainTextToken;
