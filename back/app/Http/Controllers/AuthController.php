@@ -10,9 +10,26 @@ use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
+    public function index(LoginRequest $request)
+    {
+        $validatedData = $request->validated();
+        \Log::info('Login attempt:', $validatedData);
+        if(Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])){
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
+            return response()->json([
+                'token' => $token,
+                'success' => 'true',
+            ], 200);
+        }else{
+            return response()->noContent(403);
+        }
+    }
+
     public function store(RegisterRequest $requst) 
     {
         $validatedData = $requst->validated();

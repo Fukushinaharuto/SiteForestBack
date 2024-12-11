@@ -3,16 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,8 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'email' => ['required', 'email'],
+            'password' => ['required', Password::defaults()],
         ];
     }
 
@@ -33,9 +32,7 @@ class RegisterRequest extends FormRequest
         return [
             'email.required' => 'メールアドレスは必須です。',
             'email.email' => '有効なメールアドレスを入力してください。',
-            'email.unique' => 'そのメールアドレスは既に登録されています。',
             'password.required' => 'パスワードは必須です。',
-            'password.confirmed' => 'パスワードが一致しません。',
             'password.min' => 'パスワードは8文字以上でなければなりません。',
             'password.mixedCase' => 'パスワードには大文字と小文字の両方を含める必要があります。',
             'password.numbers' => 'パスワードには少なくとも1つの数字が必要です。',
