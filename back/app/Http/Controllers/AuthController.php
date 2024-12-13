@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Validation\Rules\Password;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 
@@ -22,10 +19,9 @@ class AuthController extends Controller
             $token = $user->createToken('token')->plainTextToken;
             return response()->json([
                 'token' => $token,
-                'success' => 'true',
             ], 200);
         }else{
-            return response()->noContent(403);
+            return response()->noContent(401);
         }
     }
 
@@ -41,6 +37,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return response()->noContent(202);
+        return response()->json(202);
     }
 }
