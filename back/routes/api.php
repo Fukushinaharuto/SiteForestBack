@@ -3,16 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProjectController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        // ユーザー関連の処理
+    });
+    
+    Route::post('/project', [ProjectController::class, 'store']);
+});
 Route::post('/register',  [AuthController::class, 'store']);
 Route::post('/login', [AuthController::class, 'index']);
-
-Route::get('/hello', function(){
-    return response()->json([
-        'hello' => "おはよう",
-    ]);
-});
