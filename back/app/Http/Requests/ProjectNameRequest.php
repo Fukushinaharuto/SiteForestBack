@@ -23,7 +23,7 @@ class ProjectNameRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'unique:projects,name'],
-            'description' => ['string'],
+            'description' => ['nullable', 'string'],
         ];
     }
 
@@ -32,7 +32,8 @@ class ProjectNameRequest extends FormRequest
         return [
             'name.required' => 'プロジェクト名は必須です。',
             'name.string' => '文字列で入力してください。',
-            'description' => '文字列で入力してください。',
+            'name.unique' => 'そのプロジェクト名は使用されています。',
+            'description.string' => '文字列で入力してください。',
         ];
     }
 }
