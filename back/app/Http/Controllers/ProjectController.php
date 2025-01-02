@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
+    public function show()
+    {
+        $user = Auth::user();
+        $url = $user->projects()->pluck('name');
+        return response()->json(['url' => $url]);
+    }
+
     public function store(ProjectNameRequest $request) 
     {
         $user = Auth::user();

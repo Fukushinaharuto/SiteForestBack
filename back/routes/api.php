@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     
     Route::post('/project', [ProjectController::class, 'store']);
+    Route::get('/project/name', [ProjectController::class, 'show']);
 });
 Route::post('/register',  [AuthController::class, 'store']);
 Route::post('/login', [AuthController::class, 'index']);
