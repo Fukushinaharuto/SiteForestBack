@@ -12,8 +12,8 @@ class ProjectController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $url = $user->projects()->pluck('name');
-        return response()->json(['url' => $url]);
+        $name = $user->projects()->pluck('name');
+        return response()->json(['name' => $name]);
     }
 
     public function store(ProjectNameRequest $request) 
