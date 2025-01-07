@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $projectList = $user->projects()->select('name', 'description')->get();
+        return response()->json($projectList);
+    }
+
     public function show()
     {
         $user = Auth::user();
@@ -29,7 +36,6 @@ class ProjectController extends Controller
             DB::commit();
             return response()->json(["project" => $project]);
         } catch (ValidationException $error) {
-            // バリデーションエラーの場合のレスポンス
             DB::rollBack();
             return response()->json([
                 'message' => '入力データが無効です。',
