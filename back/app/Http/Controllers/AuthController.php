@@ -37,6 +37,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return response()->json(202);
+        return response()->noContent(202);
     }
 }

@@ -8,7 +8,8 @@ use App\Http\Controllers\ProjectController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/project', [ProjectController::class, 'index']);
     Route::post('/project', [ProjectController::class, 'store']);
-    Route::get('/project/name', [ProjectController::class, 'show']);
+    Route::get('/project/check', [ProjectController::class, 'check']);
+    Route::put('/project/{id}', [ProjectController::class, 'update']);
 });
 Route::post('/register',  [AuthController::class, 'store']);
 Route::post('/login', [AuthController::class, 'index']);
