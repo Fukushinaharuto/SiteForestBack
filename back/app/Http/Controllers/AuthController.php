@@ -39,4 +39,9 @@ class AuthController extends Controller
 
         return response()->noContent(202);
     }
+
+    // public function search()
+    // {
+
+    // }
 }

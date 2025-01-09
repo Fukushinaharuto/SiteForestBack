@@ -21,19 +21,27 @@ class ProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'unique:projects,name'],
+        $rules = [
+            'name' => ['required', 'string'],
             'description' => ['nullable', 'string'],
         ];
+        if ($this->isMethod('post')) {
+            $rules['name'][] = 'unique:projects,name';
+        }
+        if ($this->isMethod('patch')) {
+            $rules['name'][] = 'unique:projects,name,' . $this->route('id');
+        }
+
+        return $rules;
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'プロジェクト名は必須です。',
+            'name.required' => 'プロジェクト名は文字列で入力してください。',
             'name.string' => '文字列で入力してください。',
-            'name.unique' => 'そのプロジェクト名は使用されています。',
-            'description.string' => '文字列で入力してください。',
+            'name.unique' => 'このプロジェクト名は既に使用されています。',
+            'description.string' => '説明は文字列で入力してください',
         ];
     }
 }

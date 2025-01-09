@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProjectRequest;
 use Illuminate\Support\Facades\DB;
+use App\Models\Project;
 
 class ProjectController extends Controller
 {
@@ -58,14 +59,30 @@ class ProjectController extends Controller
                 ]);
                 return;
             });
-            return response()->noContent(204);
+            return response()->json(['message' => 'プロジェクトの編集に成功しました。']);
         } catch (\Exception $error) {
             return response()->json([
                 'message' => 'プロジェクトの編集に失敗しました。',
                 'error' => $error->getMessage(),
             ], 500);
         }
+    }
 
-        
+    public function destroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:projects,id',
+        ]);
+        $ids = $validated['ids'];
+        try {
+            DB::transaction(function () use ($ids) {
+                Project::whereIn("id", $ids)->delete();
+            });
+
+            return response()->noContext(200);
+        } catch (\Exception $e) {
+            return response()->noContext(500);
+        }
     }
 }
