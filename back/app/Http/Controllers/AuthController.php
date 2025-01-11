@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
-    public function index(LoginRequest $request)
+    public function login(LoginRequest $request)
     {
         $validatedData = $request->validated();
         if(Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])){
@@ -25,7 +27,7 @@ class AuthController extends Controller
         }
     }
 
-    public function store(RegisterRequest $requst) 
+    public function register(RegisterRequest $requst) 
     {
         $validatedData = $requst->validated();
         $user = User::create([
@@ -40,8 +42,15 @@ class AuthController extends Controller
         return response()->noContent(202);
     }
 
-    // public function search()
-    // {
+    public function search(Request $request)
+    {
+        $token = $request->bearerToken();
+        try {
+            $tokenRecord = PersonalAccessToken::findToken($token);
+            return response()->json(['tokenExists' => (bool) $tokenRecord]);
+        } catch (\Exception $e) {
+            return response()->noContext(500);
+        }
+    }
 
-    // }
 }

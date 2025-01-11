@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/verifyToken', [AuthController::class, 'search']);
     Route::get('/project', [ProjectController::class, 'index']);
     Route::post('/project', [ProjectController::class, 'store']);
     Route::get('/project/check', [ProjectController::class, 'check']);
@@ -13,5 +14,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/project/{id}', [ProjectController::class, 'update']);
     
 });
-Route::post('/register',  [AuthController::class, 'store']);
-Route::post('/login', [AuthController::class, 'index']);
+Route::post('/register',  [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
