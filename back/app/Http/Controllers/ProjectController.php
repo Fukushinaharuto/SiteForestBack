@@ -71,18 +71,19 @@ class ProjectController extends Controller
     public function destroy(Request $request)
     {
         $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:projects,id',
+            'idArray' => 'required|array',
+            'idArray.*' => 'integer|exists:projects,id',
         ]);
-        $ids = $validated['ids'];
+        $idArray = $validated['idArray'];
         try {
-            DB::transaction(function () use ($ids) {
-                Project::whereIn("id", $ids)->delete();
+            DB::transaction(function () use ($idArray) {
+                Project::whereIn("id", $idArray)->delete();
             });
 
-            return response()->noContext(200);
+            return response()->json(['message' => '削除に成功しました。']);
         } catch (\Exception $e) {
-            return response()->noContext(500);
+            return response()->json(['message' => '削除に失敗しました。'], 500);
         }
     }
+
 }
