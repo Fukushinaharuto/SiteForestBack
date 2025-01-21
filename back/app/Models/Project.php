@@ -13,7 +13,7 @@ class Project extends Model
     ];
     public function pages()
     {
-        return belongsTo(page::class);
+        return $this->hasMany(Page::class);
     }
 
     public function user()

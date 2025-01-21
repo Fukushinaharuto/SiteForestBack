@@ -17,12 +17,21 @@ class ProjectController extends Controller
         return response()->json($projectList);
     }
 
-    public function check()
+    public function check(Request $request)
     {
         $user = Auth::user();
+        $projectName = $request->input('name');
+        $project = $user->projects()->where('name', $projectName)->first();
         $name = $user->projects()->pluck('name');
-        return response()->json(['name' => $name]);
+
+        if ($project) {
+            $page = $project->pages()->pluck('name');
+            return response()->json(['name' => $name, 'page' => $page]);
+        } else {
+            return response()->json(['name' => $name, 'page' => []], 404);
+        }
     }
+
 
     public function store(ProjectRequest $request) 
     {
@@ -31,10 +40,14 @@ class ProjectController extends Controller
     
         try {
             $project = DB::transaction(function () use ($user, $validatedData) {
-                return $user->projects()->create([
+                $project =  $user->projects()->create([
                     'name' => $validatedData['name'],
                     'description' => $validatedData['description'],
-                ])->only(['name']);
+                ]);
+                $project->pages()->create([
+                    'name' => 'home',
+                ]);
+                return $project;
             });
             return response()->json(["project" => $project]);
         } catch (\Exception $error) {
