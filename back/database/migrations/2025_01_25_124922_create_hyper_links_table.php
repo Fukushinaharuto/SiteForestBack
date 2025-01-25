@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('texts', function (Blueprint $table) {
+        Schema::create('hyper_links', function (Blueprint $table) {
             $table->id();
-            $table->string('text_color');
-            $table->integer('size');
-            $table->string('font');
-            $table->string('children');
-            $table->enum('text_align', ['left', 'center', 'right']);
-            $table->enum('vertical_align', ['top', 'middle', 'bottom']);
+            $table->foreignId('text_id')->constrained()->onDelete('cascade');
+            $table->string('href');
+            $table->enum('is_link', ['text', 'back', 'no']);
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('texts');
+        Schema::dropIfExists('hyper_links');
     }
 };

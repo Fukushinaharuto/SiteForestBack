@@ -14,13 +14,17 @@ return new class extends Migration
         Schema::create('page_components', function (Blueprint $table) {
             $table->id();
             $table->foreignId('page_id')->constrained('pages')->onDelete('cascade');
-            $table->foreignId('component_id')->constrained('components')->onDelete('cascade');
-            $table->foreignId('properties_id')->nullable()->constrained('properties')->onDelete('set null');
+            $table->string('type');
             $table->float('top');
             $table->float('left');
             $table->float('width');
             $table->float('height');
-            $table->integer('z_index');
+            $table->string('color');
+            $table->string('unit');
+            $table->integer('border');
+            $table->string('border_color');
+            $table->float('opacity');
+            $table->float('angle');
             $table->timestamps();
         });
     }
