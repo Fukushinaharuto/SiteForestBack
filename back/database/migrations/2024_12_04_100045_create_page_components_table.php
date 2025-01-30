@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('color');
             $table->string('unit');
             $table->integer('border');
-            $table->string('border_color');
+            $table->string('border_color')->nullable();
             $table->float('opacity');
             $table->float('angle');
             $table->timestamps();

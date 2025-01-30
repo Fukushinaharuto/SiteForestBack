@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PageComponentController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/verifyToken', [AuthController::class, 'search']);
@@ -15,7 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/project/{id}', [ProjectController::class, 'update']);
     Route::get('/page', [PageController::class, 'index']);
     Route::post('/page', [PageController::class, 'store']);
-    
+    Route::post('/pageComponent', [PageComponentController::class, 'store']);
 });
 Route::post('/register',  [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
