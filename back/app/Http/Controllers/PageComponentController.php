@@ -120,16 +120,18 @@ class PageComponentController extends Controller
 
             
         if (!empty($pageComponents)) {
-            DB::table('page_components')->insert($pageComponents);
+            DB::table('page_components')->upsert($pageComponents, ['id'], [
+                'top', 'left', 'width', 'height', 'color', 'unit', 'border', 'border_color', 'opacity', 'angle', 'updated_at'
+            ]);
         }
         if (!empty($squares)) {
-            DB::table('squares')->insert($squares);
+            DB::table('squares')->upsert($squares, ['page_component_id'], ['borderRadius', 'updated_at']);
         }
         if (!empty($texts)) {
-            DB::table('texts')->insert($texts);
+            DB::table('texts')->upsert($texts, ['id'], ['text_color', 'size', 'font', 'children', 'text_align', 'vertical_align', 'updated_at']);
         }
         if (!empty($hyperLinks)) {
-            DB::table('hyper_links')->insert($hyperLinks);
+            DB::table('hyper_links')->upsert($hyperLinks, ['id'], ['href', 'is_link', 'updated_at']);
         }
     });
 
