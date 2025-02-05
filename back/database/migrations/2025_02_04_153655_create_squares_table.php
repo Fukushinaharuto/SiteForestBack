@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('texts', function (Blueprint $table) {
+        Schema::create('squares', function (Blueprint $table) {
             $table->id();
-            $table->string('text_color');
-            $table->integer('size');
-            $table->string('font');
-            $table->string('children');
-            $table->enum('text_align', ['left', 'center', 'right']);
-            $table->enum('vertical_align', ['top', 'middle', 'bottom']);
+            $table->foreignId('page_component_id')->constrained('page_components')->onDelete('cascade');
+            $table->string('borderRadius');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('texts');
+        Schema::dropIfExists('squares');
     }
 };

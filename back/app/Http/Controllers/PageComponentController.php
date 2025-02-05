@@ -21,7 +21,6 @@ class PageComponentController extends Controller
     }
 
     $pageRecord = $project->pages()->where('name', $page)->first();
-
     if (!$pageRecord) {
         return response()->json(['message' => 'Page not found'], 404);
     }
@@ -46,15 +45,15 @@ class PageComponentController extends Controller
             if (!isset($component['type'])) {
                 throw new \Exception('Missing "type" key in component');
             }
-
             $pageComponents[] = [
+                'id' => $component['id'],
                 'page_id' => $page_id,
                 'type' => $component['type'],
                 'top' => $component['y'],
                 'left' => $component['x'],
                 'width' => $component['width'],
                 'height' => $component['height'],
-                'color' => $component['color'],
+                'color' => $component['color'] ?? '',
                 'unit' => $component['unit'] ?? 'px',
                 'border' => $component['border'],
                 'border_color' => $component['borderColor'] ?? '',
@@ -63,19 +62,12 @@ class PageComponentController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-        }
-
-        DB::table('page_components')->insert($pageComponents);
-        $pageComponentIds = DB::getPdo()->lastInsertId();
-
-        foreach ($components as $index => $component) {
-            $pageComponentId = $pageComponentIds + $index;
 
             switch ($component['type']) {
                 case 'square':
                     $squares[] = [
-                        'id' => $pageComponentId,
-                        'borderRadius' => $component['borderRadius'],
+                        'page_component_id' => $component['id'],
+                        'borderRadius' => $component['borderRadius'] ?? '',
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -83,7 +75,8 @@ class PageComponentController extends Controller
 
                 case 'text':
                     $texts[] = [
-                        'id' => $pageComponentId,
+                        'id' => $component['id'],
+                        'page_component_id' => $component['id'],
                         'text_color' => $component['textColor'],
                         'size' => $component['size'],
                         'font' => $component['font'] ?? 'default-font',
@@ -96,11 +89,22 @@ class PageComponentController extends Controller
                     break;
 
                 case 'hyperLink':
+                    $texts[] = [
+                        'id' => $component['id'],
+                        'page_component_id' => $component['id'],
+                        'text_color' => $component['textColor'],
+                        'size' => $component['size'],
+                        'font' => $component['font'] ?? 'default-font',
+                        'children' => $component['children'] ?? '',
+                        'text_align' => $component['textAlign'],
+                        'vertical_align' => $component['verticalAlign'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                     $hyperLinks[] = [
-                        'id' => $pageComponentId,
-                        'text_id' => $pageComponentId,
-                        'href' => $component['href'],
-                        'is_link' => $component['is_link'],
+                        'text_id' => $component['id'],
+                        'href' => $component['href'] ?? '',
+                        'is_link' => $component['isLink'],
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -111,11 +115,21 @@ class PageComponentController extends Controller
             }
         }
 
+        
+
+
+            
+        if (!empty($pageComponents)) {
+            DB::table('page_components')->insert($pageComponents);
+        }
         if (!empty($squares)) {
             DB::table('squares')->insert($squares);
         }
         if (!empty($texts)) {
             DB::table('texts')->insert($texts);
+        }
+        if (!empty($hyperLinks)) {
+            DB::table('hyper_links')->insert($hyperLinks);
         }
     });
 
