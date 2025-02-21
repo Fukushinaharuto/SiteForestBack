@@ -9,7 +9,7 @@ use App\Http\Controllers\PageComponentController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/verifyToken', [AuthController::class, 'search']);
-    Route::get('/project', [ProjectController::class, 'index']);
+    Route::get('/project/show', [ProjectController::class, 'show']);
     Route::post('/project', [ProjectController::class, 'store']);
     Route::post('/project/check', [ProjectController::class, 'check']);
     Route::delete('/project/destroy', [ProjectController::class, 'destroy']);
@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/page', [PageController::class, 'store']);
     Route::post('/pageComponent', [PageComponentController::class, 'store']);
 });
+Route::get('/project', [ProjectController::class, 'index']);
 Route::post('/register',  [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 

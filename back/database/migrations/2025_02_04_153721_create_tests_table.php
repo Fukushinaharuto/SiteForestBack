@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('texts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('page_component_id')->constrained('page_components')->onDelete('cascade');
+            $table->foreignId('page_component_id')->unique()->constrained('page_components')->onDelete('cascade');
             $table->string('text_color');
             $table->integer('size');
             $table->string('font');

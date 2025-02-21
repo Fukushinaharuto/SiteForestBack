@@ -12,6 +12,12 @@ class ProjectController extends Controller
 {
     public function index()
     {
+        $projects = Project::all();
+        return response()->json($projects);
+    }
+
+    public function show()
+    {
         $user = Auth::user();
         $projectList = $user->projects()->select('name', 'description', 'id')->get();
         return response()->json($projectList);

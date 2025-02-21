@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('hyper_links', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('text_id')->constrained()->onDelete('cascade');
+            $table->foreignId('text_id')->unique()->constrained()->onDelete('cascade');
             $table->string('href');
             $table->enum('is_link', ['text', 'back', 'no']);
             $table->timestamps();
