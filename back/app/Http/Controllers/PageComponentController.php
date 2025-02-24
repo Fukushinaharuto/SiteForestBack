@@ -92,13 +92,9 @@ class PageComponentController extends Controller
         $formattedComponents[] = $formattedComponent;
     }
 
-    $response = [
-        'name' => $projectName,
-        'page' => $pageName,
-        'droppedItems' => $formattedComponents
-    ];
-
-    return response()->json($response);
+    return response()->json([
+        'droppedItems' => $formattedComponents,
+    ]);
 }
 
 
