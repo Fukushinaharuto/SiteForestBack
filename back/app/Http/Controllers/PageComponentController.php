@@ -11,53 +11,96 @@ use App\Models\Project;
 class PageComponentController extends Controller
 {
     public function index(Request $request)
-    {
-        $projectName = $request->input('name');
-        $pageName = $request->input('page');
+{
+    $projectName = $request->input('name');
+    $pageName = $request->input('page');
 
-        $page_id = DB::table('projects')
-                    ->join('pages', 'projects.id', '=', 'pages.project_id')
-                    ->where('projects.name', $projectName)
-                    ->where('pages.name', $pageName)
-                    ->value('pages.id');
-        
-        $pageComponents = DB::table('page_components')
-        ->where('page_id', $page_id)
-        ->get();
+    $page_id = DB::table('projects')
+                ->join('pages', 'projects.id', '=', 'pages.project_id')
+                ->where('projects.name', $projectName)
+                ->where('pages.name', $pageName)
+                ->value('pages.id');
 
-        if ($pageComponents->isEmpty()) {
-            return response()->json(['message' => '存在しないpage_idが検出されました'], 404);
-        }
-
-        if (!$page_id) {
-            return response()->json(['message' => 'page_idが存在が存在しません'], 404);
-        }
-        foreach ($pageComponents as $component) {
-            switch ($component->type) {
-                case 'square':
-                    $component->details = DB::table('squares')
-                                            ->where('page_component_id', $component->id)
-                                            ->first();
-                    break;
-
-                case 'text':
-                    $component->details = DB::table('texts')
-                                            ->where('page_component_id', $component->id)
-                                            ->first();
-                    break;
-
-                case 'hyperLink':
-                    $component->details = DB::table('texts')
-                                            ->where('page_component_id', $component->id)
-                                            ->first();
-                    $component->details->link = DB::table('hyper_links')
-                                                    ->where('text_id', $component->id)
-                                                    ->first();
-                    break;
-            }
-        }
-        return response()->json($pageComponents);
+    if (!$page_id) {
+        return response()->json(['message' => 'page_idが存在しません'], 404);
     }
+
+    $pageComponents = DB::table('page_components')
+                        ->where('page_id', $page_id)
+                        ->get();
+
+    if ($pageComponents->isEmpty()) {
+        return response()->json(['message' => '存在しないpage_idが検出されました'], 404);
+    }
+
+    $formattedComponents = [];
+
+    foreach ($pageComponents as $component) {
+        $formattedComponent = [
+            'id' => $component->id,
+            'type' => $component->type,
+            'x' => $component->left,
+            'y' => $component->top,
+            'width' => $component->width,
+            'height' => $component->height,
+            'color' => $component->color,
+            'border' => $component->border,
+            'borderColor' => $component->border_color,
+            'opacity' => $component->opacity,
+            'angle' => $component->angle,
+        ];
+
+        switch ($component->type) {
+            case 'square':
+                $details = DB::table('squares')->where('page_component_id', $component->id)->first();
+                if ($details) {
+                    $formattedComponent['borderRadius'] = $details->borderRadius;
+                }
+                break;
+
+            case 'text':
+                $details = DB::table('texts')->where('page_component_id', $component->id)->first();
+                if ($details) {
+                    $formattedComponent['textColor'] = $details->text_color;
+                    $formattedComponent['size'] = $details->size;
+                    $formattedComponent['font'] = $details->font;
+                    $formattedComponent['children'] = $details->children;
+                    $formattedComponent['textAlign'] = $details->text_align;
+                    $formattedComponent['verticalAlign'] = $details->vertical_align;
+                }
+                break;
+
+            case 'hyperLink':
+                $details = DB::table('texts')->where('page_component_id', $component->id)->first();
+                if ($details) {
+                    $formattedComponent['textColor'] = $details->text_color;
+                    $formattedComponent['size'] = $details->size;
+                    $formattedComponent['font'] = $details->font;
+                    $formattedComponent['children'] = $details->children;
+                    $formattedComponent['textAlign'] = $details->text_align;
+                    $formattedComponent['verticalAlign'] = $details->vertical_align;
+
+                    $link = DB::table('hyper_links')->where('text_id', $component->id)->first();
+                    if ($link) {
+                        $formattedComponent['href'] = $link->href;
+                        $formattedComponent['isLink'] = $link->is_link;
+                    }
+                }
+                break;
+        }
+
+        $formattedComponents[] = $formattedComponent;
+    }
+
+    $response = [
+        'name' => $projectName,
+        'page' => $pageName,
+        'droppedItems' => $formattedComponents
+    ];
+
+    return response()->json($response);
+}
+
 
     public function store(Request $request) 
     {
