@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('border_color');
             $table->float('opacity');
             $table->float('angle');
+            $table->integer('zIndex');
             $table->timestamps();
         });
     }

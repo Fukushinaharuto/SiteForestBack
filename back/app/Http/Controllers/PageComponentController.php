@@ -48,6 +48,7 @@ class PageComponentController extends Controller
             'borderColor' => $component->border_color,
             'opacity' => $component->opacity,
             'angle' => $component->angle,
+            'zIndex' => $component->zIndex,
         ];
 
         switch ($component->type) {
@@ -147,6 +148,7 @@ class PageComponentController extends Controller
                     'border_color' => $component['borderColor'] ?? '',
                     'opacity' => $component['opacity'],
                     'angle' => $component['angle'],
+                    'zIndex' => $component['zIndex'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -209,7 +211,7 @@ class PageComponentController extends Controller
                 
             if (!empty($pageComponents)) {
                 DB::table('page_components')->upsert($pageComponents, ['id'], [
-                    'top', 'left', 'width', 'height', 'color', 'unit', 'border', 'border_color', 'opacity', 'angle', 'updated_at'
+                    'top', 'left', 'width', 'height', 'color', 'unit', 'border', 'border_color', 'opacity', 'angle', 'zIndex', 'updated_at'
                 ]);
             }
             if (!empty($squares)) {
