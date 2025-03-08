@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Project;
+use App\Models\PageComponent;
 
 
 
@@ -229,4 +230,17 @@ class PageComponentController extends Controller
     }
 
 
+    public function destroy(Request $request)
+    {
+        try {
+            $id = $request->input('id');
+            $Item = PageComponent::findOrFail($id);
+            
+            $Item->delete();
+
+            return response()->json(['message' => '削除に成功しました。']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => '削除に失敗しました。'], 500);
+        }
+    }
 }
