@@ -230,12 +230,10 @@ class PageComponentController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         try {
-            $id = $request->input('id');
             $Item = PageComponent::findOrFail($id);
-            
             $Item->delete();
 
             return response()->json(['message' => '削除に成功しました。']);

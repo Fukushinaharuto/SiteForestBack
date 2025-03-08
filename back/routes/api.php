@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/page', [PageController::class, 'index']);
     Route::post('/page', [PageController::class, 'store']);
     Route::post('/pageComponent', [PageComponentController::class, 'store']);
-    Route::delete('/pageComponent', [PageComponentController::class, 'destroy']);
+    Route::delete('/pageComponent/{id}', [PageComponentController::class, 'destroy']);
 });
 Route::get('/project', [ProjectController::class, 'index']);
 Route::post('/register',  [AuthController::class, 'register']);
